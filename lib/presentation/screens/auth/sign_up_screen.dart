@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/presentation/screens/auth/email_verify_screen.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -43,6 +42,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: const InputDecoration(
                         hintText: 'Email',
                       ),
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter email';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -51,6 +56,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: const InputDecoration(
                         hintText: 'First Name',
                       ),
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter first name';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -59,6 +70,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: const InputDecoration(
                         hintText: 'Last Name',
                       ),
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter last name';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -67,6 +84,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: const InputDecoration(
                         hintText: 'Mobile',
                       ),
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter mobile';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -75,17 +98,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: const InputDecoration(
                         hintText: 'Password',
                       ),
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter email';
+                        }
+                        if (value!.length <= 6) {
+                          return 'Minimum 6 letter password';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EmailVerifyScreen()));
+                          if (_formKey.currentState!.validate()) {}
                         },
                         child: const Icon(
                           Icons.arrow_circle_right_outlined,
