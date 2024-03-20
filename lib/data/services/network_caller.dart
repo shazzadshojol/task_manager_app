@@ -3,11 +3,13 @@ import 'dart:developer';
 
 import 'package:http/http.dart';
 import 'package:task_manager_app/data/models/response_obj.dart';
+import 'package:task_manager_app/presentation/controllers/auth_controller.dart';
 
 class NetworkCaller {
   static Future<ResponseObj> getRequest(String url) async {
     try {
-      final Response response = await get(Uri.parse(url));
+      final Response response = await get(Uri.parse(url),
+          headers: {'token': AuthController.accessToken ?? ''});
 
       log(response.statusCode.toString());
       log(response.body.toString());
@@ -16,6 +18,12 @@ class NetworkCaller {
         final decodeResponse = jsonDecode(response.body);
         return ResponseObj(
             isSuccess: true, statusCode: 200, responseBody: decodeResponse);
+      } else if (response.statusCode == 401) {
+        return ResponseObj(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            responseBody: '',
+            errorMassage: 'Invalid input');
       } else {
         return ResponseObj(
             isSuccess: false,
@@ -37,7 +45,10 @@ class NetworkCaller {
     try {
       final Response response = await post(Uri.parse(url),
           body: jsonEncode(body),
-          headers: {'content-type': 'application/json'});
+          headers: {
+            'content-type': 'application/json',
+            'token': AuthController.accessToken ?? ''
+          });
 
       log(response.statusCode.toString());
       log(response.body.toString());

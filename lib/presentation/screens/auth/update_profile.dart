@@ -23,7 +23,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar,
+      appBar: commonAppBar,
       body: ScreenBackground(
           child: Form(
         key: _formKey,

@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/presentation/screens/bottom_nav_screen.dart';
-import 'package:task_manager_app/presentation/screens/auth/email_verify_screen.dart';
+import 'package:task_manager_app/data/services/network_caller.dart';
+import 'package:task_manager_app/data/utility/urls.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-
-import 'package:task_manager_app/presentation/screens/auth/sign_up_screen.dart';
+import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 
 class AddTaskContent extends StatefulWidget {
   const AddTaskContent({
@@ -20,6 +18,7 @@ class _AddTaskContentState extends State<AddTaskContent> {
   final TextEditingController _disTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _addNewTaskProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class _AddTaskContentState extends State<AddTaskContent> {
               children: [
                 const SizedBox(height: 100),
                 Text(
-                  'Get Started With',
+                  'Add your task',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 16),
@@ -45,6 +44,12 @@ class _AddTaskContentState extends State<AddTaskContent> {
                   decoration: const InputDecoration(
                     hintText: 'Subject',
                   ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter subject';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -54,17 +59,31 @@ class _AddTaskContentState extends State<AddTaskContent> {
                   decoration: const InputDecoration(
                     hintText: 'Description',
                   ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter description';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(
-                      Icons.arrow_circle_right_outlined,
-                      size: 35,
+                  child: Visibility(
+                    visible: _addNewTaskProgress == false,
+                    replacement: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _addNewTask();
+                        }
+                      },
+                      child: const Icon(
+                        Icons.arrow_circle_right_outlined,
+                        size: 35,
+                      ),
                     ),
                   ),
                 ),
@@ -75,6 +94,34 @@ class _AddTaskContentState extends State<AddTaskContent> {
         ),
       )),
     );
+  }
+
+  Future<void> _addNewTask() async {
+    _addNewTaskProgress = true;
+    setState(() {});
+    Map<String, dynamic> inputParams = {
+      "title": _subjectTextController.text.trim(),
+      "description": _disTextController.text.trim(),
+      "status": "New"
+    };
+    final response =
+        await NetworkCaller.postRequest(Urls.createTask, inputParams);
+
+    _addNewTaskProgress = false;
+    setState(() {});
+
+    if (response.isSuccess) {
+      _subjectTextController.clear();
+      _disTextController.clear();
+      if (mounted) {
+        showSnackBarMessage(context, 'Task added');
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+            context, response.errorMassage ?? 'Task adding failed', true);
+      }
+    }
   }
 
   @override

@@ -14,7 +14,7 @@ class _CancelledTaskState extends State<CancelledTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar,
+      appBar: commonAppBar,
       body: ScreenBackground(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

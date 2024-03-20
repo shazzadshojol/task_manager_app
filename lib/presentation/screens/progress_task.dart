@@ -14,7 +14,7 @@ class _ProgressTaskState extends State<ProgressTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar,
+      appBar: commonAppBar,
       body: ScreenBackground(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

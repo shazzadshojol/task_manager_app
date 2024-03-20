@@ -14,7 +14,7 @@ class _CompleteTaskState extends State<CompleteTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar,
+      appBar: commonAppBar,
       body: ScreenBackground(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

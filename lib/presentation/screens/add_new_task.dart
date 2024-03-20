@@ -17,7 +17,7 @@ class _AddNewTaskState extends State<AddNewTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar,
+      appBar: commonAppBar,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
