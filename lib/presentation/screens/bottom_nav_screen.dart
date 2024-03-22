@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/presentation/screens/add_new_task.dart';
 import 'package:task_manager_app/presentation/screens/cancelled_task.dart';
-import 'package:task_manager_app/presentation/screens/compleate_task.dart';
+import 'package:task_manager_app/presentation/screens/complete_task.dart';
 import 'package:task_manager_app/presentation/screens/progress_task.dart';
 import 'package:task_manager_app/presentation/utils/app_color.dart';
 

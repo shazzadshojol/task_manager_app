@@ -17,20 +17,20 @@ PreferredSizeWidget get commonAppBar {
         children: [
           const CircleAvatar(),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Shazzad Hossain',
-                  style: TextStyle(
+                  AuthController.userData?.fullName ?? '',
+                  style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       color: Colors.white),
                 ),
                 Text(
-                  'shazzadshojol@gmail.com',
-                  style: TextStyle(
+                  AuthController.userData?.email ?? '',
+                  style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: Colors.white),
@@ -47,7 +47,7 @@ PreferredSizeWidget get commonAppBar {
                         builder: (context) => const SignInScreen()),
                     (route) => false);
               },
-              icon: const Icon(Icons.logout_outlined))
+              icon: const Icon(Icons.logout_outlined)),
         ],
       ),
     ),

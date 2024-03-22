@@ -8,14 +8,14 @@ import 'package:task_manager_app/presentation/widgets/common_appbar.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 
-class ProgressTask extends StatefulWidget {
-  const ProgressTask({super.key});
+class CompleteTask extends StatefulWidget {
+  const CompleteTask({super.key});
 
   @override
-  State<ProgressTask> createState() => _ProgressTaskState();
+  State<CompleteTask> createState() => _CompleteTaskState();
 }
 
-class _ProgressTaskState extends State<ProgressTask> {
+class _CompleteTaskState extends State<CompleteTask> {
   bool _getAllTaskStatusCountProgress = false;
   bool _getCompleteTaskListInProgress = false;
   bool _deleteTaskInProgress = false;
@@ -38,21 +38,27 @@ class _ProgressTaskState extends State<ProgressTask> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-                child: ListView.builder(
-                    itemCount: _taskListByStatus.taskList?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      return CardContext(
-                        taskItem: _taskListByStatus.taskList![index],
-                        onDelete: () {
-                          _deleteTaskById(
-                              _taskListByStatus.taskList![index].sId!);
-                        },
-                        onEdit: () {
-                          _showUpdateStatusDialog(
-                              _taskListByStatus.taskList![index].sId!);
-                        },
-                      );
-                    }))
+                child: Visibility(
+              visible: _getCompleteTaskListInProgress == false,
+              replacement: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              child: ListView.builder(
+                  itemCount: _taskListByStatus.taskList?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return CardContext(
+                      taskItem: _taskListByStatus.taskList![index],
+                      onDelete: () {
+                        _deleteTaskById(
+                            _taskListByStatus.taskList![index].sId!);
+                      },
+                      onEdit: () {
+                        _showUpdateStatusDialog(
+                            _taskListByStatus.taskList![index].sId!);
+                      },
+                    );
+                  }),
+            ))
           ],
         ),
       ),
@@ -78,7 +84,7 @@ class _ProgressTaskState extends State<ProgressTask> {
   Future<void> _fetchCompleteTaskListByStatus() async {
     _getCompleteTaskListInProgress = true;
     setState(() {});
-    final response = await NetworkCaller.getRequest(Urls.progressTaskList);
+    final response = await NetworkCaller.getRequest(Urls.completedTaskList);
     if (response.isSuccess) {
       _taskListByStatus = TaskListByStatus.fromJson(response.responseBody);
     } else {
@@ -122,17 +128,16 @@ class _ProgressTaskState extends State<ProgressTask> {
                         _updateTaskById(id, 'New');
                         Navigator.pop(context);
                       }),
-                  ListTile(
-                    title: const Text('Completed'),
-                    onTap: () {
-                      _updateTaskById(id, 'Completed');
-                      Navigator.pop(context);
-                    },
-                  ),
                   const ListTile(
-                    title: Text('Progress'),
+                    title: Text('Completed'),
                     trailing: Icon(Icons.check),
                   ),
+                  ListTile(
+                      title: const Text('Progress'),
+                      onTap: () {
+                        _updateTaskById(id, 'Progress');
+                        Navigator.pop(context);
+                      }),
                   ListTile(
                       title: const Text('Cancelled'),
                       onTap: () {

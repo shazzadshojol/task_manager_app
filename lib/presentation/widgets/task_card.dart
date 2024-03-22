@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   const TaskCard({
     super.key,
     required this.amount,
@@ -10,6 +10,11 @@ class TaskCard extends StatelessWidget {
   final int amount;
   final String title;
 
+  @override
+  State<TaskCard> createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -23,11 +28,11 @@ class TaskCard extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '$amount',
+          '${widget.amount}',
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         Text(
-          '$title',
+          widget.title,
           style: const TextStyle(
               fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey),
         ),

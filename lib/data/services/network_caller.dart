@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:task_manager_app/app.dart';
 import 'package:task_manager_app/data/models/response_obj.dart';
 import 'package:task_manager_app/presentation/controllers/auth_controller.dart';
+import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
 
 class NetworkCaller {
   static Future<ResponseObj> getRequest(String url) async {
@@ -19,6 +22,7 @@ class NetworkCaller {
         return ResponseObj(
             isSuccess: true, statusCode: 200, responseBody: decodeResponse);
       } else if (response.statusCode == 401) {
+        _moveToSignIn();
         return ResponseObj(
             isSuccess: false,
             statusCode: response.statusCode,
@@ -40,8 +44,8 @@ class NetworkCaller {
     }
   }
 
-  static Future<ResponseObj> postRequest(
-      String url, Map<String, dynamic> body) async {
+  static Future<ResponseObj> postRequest(String url, Map<String, dynamic> body,
+      {bool fromSignIn = false}) async {
     try {
       final Response response = await post(Uri.parse(url),
           body: jsonEncode(body),
@@ -57,6 +61,20 @@ class NetworkCaller {
         final decodeResponse = jsonDecode(response.body);
         return ResponseObj(
             isSuccess: true, statusCode: 200, responseBody: decodeResponse);
+      } else if (response.statusCode == 401) {
+        if (fromSignIn) {
+          return ResponseObj(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            responseBody: '',
+          );
+        } else {
+          _moveToSignIn();
+          return ResponseObj(
+              isSuccess: false,
+              statusCode: response.statusCode,
+              responseBody: '');
+        }
       } else {
         return ResponseObj(
             isSuccess: false,
@@ -71,5 +89,13 @@ class NetworkCaller {
           responseBody: '',
           errorMassage: e.toString());
     }
+  }
+
+  static void _moveToSignIn() async {
+    await AuthController.clearUserData();
+    Navigator.pushAndRemoveUntil(
+        TaskManager.navigatorKey.currentState!.context,
+        MaterialPageRoute(builder: (context) => const SignInScreen()),
+        (route) => false);
   }
 }
