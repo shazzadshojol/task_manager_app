@@ -34,7 +34,7 @@ class _PassSetScreenState extends State<PassSetScreen> {
               children: [
                 const SizedBox(height: 100),
                 Text(
-                  'Your Email Address',
+                  'Update password',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 16),

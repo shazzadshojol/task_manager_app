@@ -27,6 +27,6 @@ class UserData {
   }
 
   String get fullName {
-    return (firstName ?? '') + (lastName ?? '');
+    return (firstName ?? '') + (' ') + (lastName ?? '');
   }
 }

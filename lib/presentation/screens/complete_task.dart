@@ -26,6 +26,7 @@ class _CompleteTaskState extends State<CompleteTask> {
   @override
   void initState() {
     _fetchCompleteTaskListByStatus();
+    _getAllTaskCountStatus();
     super.initState();
   }
 
@@ -128,10 +129,13 @@ class _CompleteTaskState extends State<CompleteTask> {
                         _updateTaskById(id, 'New');
                         Navigator.pop(context);
                       }),
-                  const ListTile(
-                    title: Text('Completed'),
-                    trailing: Icon(Icons.check),
-                  ),
+                  ListTile(
+                      title: Text('Completed'),
+                      trailing: Icon(Icons.check),
+                      onTap: () {
+                        _updateTaskById(id, 'Completed');
+                        Navigator.pop(context);
+                      }),
                   ListTile(
                       title: const Text('Progress'),
                       onTap: () {
@@ -141,7 +145,7 @@ class _CompleteTaskState extends State<CompleteTask> {
                   ListTile(
                       title: const Text('Cancelled'),
                       onTap: () {
-                        _updateTaskById(id, 'Progress');
+                        _updateTaskById(id, 'Cancelled');
                         Navigator.pop(context);
                       }),
                 ],

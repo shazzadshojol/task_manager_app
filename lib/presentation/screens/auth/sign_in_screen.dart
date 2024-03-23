@@ -4,6 +4,7 @@ import 'package:task_manager_app/data/models/response_obj.dart';
 import 'package:task_manager_app/data/services/network_caller.dart';
 import 'package:task_manager_app/data/utility/urls.dart';
 import 'package:task_manager_app/presentation/controllers/auth_controller.dart';
+import 'package:task_manager_app/presentation/screens/auth/email_verify_screen.dart';
 import 'package:task_manager_app/presentation/screens/bottom_nav_screen.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
@@ -96,7 +97,12 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 50),
                 Center(
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EmailVerifyScreen()));
+                    },
                     child: const Text(
                       'Forgot Password?',
                       style: TextStyle(

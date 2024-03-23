@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/data/models/task_list_By_Status.dart';
 import 'package:task_manager_app/data/models/task_status_count.dart';
@@ -53,11 +54,11 @@ class _AddNewTaskState extends State<AddNewTask> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 100,
-              child: Visibility(
-                visible: _getAllTaskStatusCountProgress == false,
-                replacement: const LinearProgressIndicator(),
+            Visibility(
+              visible: _getAllTaskStatusCountProgress == false,
+              replacement: const LinearProgressIndicator(),
+              child: SizedBox(
+                height: 100,
                 child: ListView.separated(
                   itemCount: _taskStatusCount?.data?.length ?? 0,
                   scrollDirection: Axis.horizontal,

@@ -26,6 +26,7 @@ class _ProgressTaskState extends State<ProgressTask> {
   @override
   void initState() {
     _fetchCompleteTaskListByStatus();
+    _getAllTaskCountStatus();
     super.initState();
   }
 
@@ -129,14 +130,17 @@ class _ProgressTaskState extends State<ProgressTask> {
                       Navigator.pop(context);
                     },
                   ),
-                  const ListTile(
-                    title: Text('Progress'),
-                    trailing: Icon(Icons.check),
-                  ),
+                  ListTile(
+                      title: Text('Progress'),
+                      trailing: Icon(Icons.check),
+                      onTap: () {
+                        _updateTaskById(id, 'Progress');
+                        Navigator.pop(context);
+                      }),
                   ListTile(
                       title: const Text('Cancelled'),
                       onTap: () {
-                        _updateTaskById(id, 'Progress');
+                        _updateTaskById(id, 'Cancelled');
                         Navigator.pop(context);
                       }),
                 ],
