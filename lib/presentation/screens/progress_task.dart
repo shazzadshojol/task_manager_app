@@ -69,7 +69,7 @@ class _ProgressTaskState extends State<ProgressTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'get task failed');
+            context, response.errorMessage ?? 'get task failed');
       }
     }
     _getAllTaskStatusCountProgress = false;
@@ -85,7 +85,7 @@ class _ProgressTaskState extends State<ProgressTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'Get task failed');
+            context, response.errorMessage ?? 'Get task failed');
       }
     }
     _getCompleteTaskListInProgress = false;
@@ -104,7 +104,7 @@ class _ProgressTaskState extends State<ProgressTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'Delete task failed');
+            context, response.errorMessage ?? 'Delete task failed');
       }
     }
   }
@@ -161,7 +161,7 @@ class _ProgressTaskState extends State<ProgressTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'Task update task failed');
+            context, response.errorMessage ?? 'Task update task failed');
       }
     }
   }

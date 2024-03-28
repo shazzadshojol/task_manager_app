@@ -75,7 +75,7 @@ class _CancelledTaskState extends State<CancelledTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'get task failed');
+            context, response.errorMessage ?? 'get task failed');
       }
     }
     _getAllTaskStatusCountProgress = false;
@@ -91,7 +91,7 @@ class _CancelledTaskState extends State<CancelledTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'Get task failed');
+            context, response.errorMessage ?? 'Get task failed');
       }
     }
     _getCancelledTaskListInProgress = false;
@@ -110,7 +110,7 @@ class _CancelledTaskState extends State<CancelledTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'Delete task failed');
+            context, response.errorMessage ?? 'Delete task failed');
       }
     }
   }
@@ -170,7 +170,7 @@ class _CancelledTaskState extends State<CancelledTask> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'Task update task failed');
+            context, response.errorMessage ?? 'Task update task failed');
       }
     }
   }

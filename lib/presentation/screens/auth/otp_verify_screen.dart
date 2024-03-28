@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:task_manager_app/data/services/network_caller.dart';
+import 'package:task_manager_app/data/utility/urls.dart';
 
 import 'package:task_manager_app/presentation/utils/app_color.dart';
 
@@ -7,6 +9,7 @@ import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
 import 'package:task_manager_app/presentation/screens/auth/set_pass_screen.dart';
 import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
+import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   const OtpVerifyScreen({
@@ -21,6 +24,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   final TextEditingController _pinEditingController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _otpVerifyProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -76,16 +80,17 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PassSetScreen(),
-                          ),
-                        );
+                        _otpVerify();
                       },
-                      child: const Text(
-                        'verify',
-                        style: TextStyle(fontSize: 20),
+                      child: Visibility(
+                        visible: _otpVerifyProgress == false,
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        child: const Text(
+                          'verify',
+                          style: TextStyle(fontSize: 20),
+                        ),
                       )),
                 ),
                 const SizedBox(height: 50),
@@ -127,5 +132,23 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     _pinEditingController.dispose();
 
     super.dispose();
+  }
+
+  Future<void> _otpVerify() async {
+    _otpVerifyProgress = true;
+    setState(() {});
+    final otp = _pinEditingController.text;
+    final response = await NetworkCaller.getRequest(Urls.otpVerify(otp));
+
+    if (response.isSuccess && mounted) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const PassSetScreen()));
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context, 'Verification failed');
+      }
+    }
+    _otpVerifyProgress = false;
+    setState(() {});
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/data/services/network_caller.dart';
+import 'package:task_manager_app/data/utility/urls.dart';
 
 import 'package:task_manager_app/presentation/screens/auth/otp_verify_screen.dart';
 import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
 
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
+import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 
 class EmailVerifyScreen extends StatefulWidget {
   const EmailVerifyScreen({
@@ -18,6 +21,13 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
   final TextEditingController _emailTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _EmailVerifyProgress = false;
+
+  // @override
+  // void initState() {
+  //   _emailVerify();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +48,7 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'A 6 degits verification code will be sent to your email address',
+                  'A 6 number verification code will be sent to your email address',
                   style: TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 10),
@@ -54,16 +64,17 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OtpVerifyScreen(),
-                        ),
-                      );
+                      _emailVerify();
                     },
-                    child: const Icon(
-                      Icons.arrow_circle_right_outlined,
-                      size: 35,
+                    child: Visibility(
+                      visible: _EmailVerifyProgress == false,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: const Icon(
+                        Icons.arrow_circle_right_outlined,
+                        size: 35,
+                      ),
                     ),
                   ),
                 ),
@@ -104,7 +115,24 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
   @override
   void dispose() {
     _emailTextController.dispose();
-
     super.dispose();
+  }
+
+  Future<void> _emailVerify() async {
+    _EmailVerifyProgress = true;
+    setState(() {});
+    final email = _emailTextController.text;
+    final response = await NetworkCaller.getRequest(Urls.emailVerify(email));
+
+    if (response.isSuccess && mounted) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const OtpVerifyScreen()));
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context, 'Verification failed');
+      }
+    }
+    _EmailVerifyProgress = false;
+    setState(() {});
   }
 }

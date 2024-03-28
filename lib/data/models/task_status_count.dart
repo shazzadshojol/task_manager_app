@@ -4,7 +4,7 @@ class TaskStatusCount {
   String? status;
   List<TaskByStatusData>? data;
 
-  //List<TaskByStatusData>? listOfTaskByStatusData;
+  List<TaskByStatusData>? listOfTaskByStatusData;
 
   TaskStatusCount({this.status, this.data});
 

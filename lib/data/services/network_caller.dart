@@ -27,7 +27,7 @@ class NetworkCaller {
             isSuccess: false,
             statusCode: response.statusCode,
             responseBody: '',
-            errorMassage: 'Invalid input');
+            errorMessage: 'Invalid input');
       } else {
         return ResponseObj(
             isSuccess: false,
@@ -40,7 +40,7 @@ class NetworkCaller {
           isSuccess: false,
           statusCode: -1,
           responseBody: '',
-          errorMassage: e.toString());
+          errorMessage: e.toString());
     }
   }
 
@@ -87,7 +87,7 @@ class NetworkCaller {
           isSuccess: false,
           statusCode: -1,
           responseBody: '',
-          errorMassage: e.toString());
+          errorMessage: e.toString());
     }
   }
 

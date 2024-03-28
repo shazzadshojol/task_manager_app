@@ -119,7 +119,7 @@ class _AddTaskContentState extends State<AddTaskContent> {
     } else {
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMassage ?? 'Task adding failed', true);
+            context, response.errorMessage ?? 'Task adding failed', true);
       }
     }
   }
