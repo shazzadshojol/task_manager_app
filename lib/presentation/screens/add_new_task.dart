@@ -1,11 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:task_manager_app/data/models/task_list_By_Status.dart';
-import 'package:task_manager_app/data/models/task_status_count.dart';
-import 'package:task_manager_app/data/services/network_caller.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_app/presentation/controllers/task_status_count_controller.dart';
 import 'package:task_manager_app/presentation/controllers/task_status_list_controller.dart';
 import 'package:task_manager_app/presentation/screens/add_task_content.dart';
@@ -13,29 +7,33 @@ import 'package:task_manager_app/presentation/utils/app_color.dart';
 import 'package:task_manager_app/presentation/widgets/card_context.dart';
 import 'package:task_manager_app/presentation/widgets/common_appbar.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 import 'package:task_manager_app/presentation/widgets/task_card.dart';
 
-import '../../data/utility/urls.dart';
+import '../controllers/delete_task_controller.dart';
+import '../controllers/task_update_controller.dart';
 
 class AddNewTask extends StatefulWidget {
-  const AddNewTask({Key? key}) : super(key: key);
+  const AddNewTask({super.key});
 
   @override
   State<AddNewTask> createState() => _AddNewTaskState();
 }
 
 class _AddNewTaskState extends State<AddNewTask> {
-  final TaskStatusCountController taskStatusCountController =
+  final TaskStatusCountController _taskStatusCountController =
       Get.find<TaskStatusCountController>();
-  final TaskStatusListController taskStatusListController =
+  final TaskStatusListController _taskStatusListController =
       Get.find<TaskStatusListController>();
+  final TaskDeleteController _taskDeleteController =
+      Get.find<TaskDeleteController>();
+  final TaskUpdateController _taskUpdateController =
+      Get.find<TaskUpdateController>();
 
   @override
   void initState() {
     super.initState();
-    taskStatusCountController.getTaskCount();
-    taskStatusListController.getTaskList();
+    _taskStatusListController.getTaskList();
+    _taskStatusCountController.getTaskCount();
   }
 
   @override
@@ -44,13 +42,10 @@ class _AddNewTaskState extends State<AddNewTask> {
       appBar: commonAppBar,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddTaskContent()),
-          );
+          Get.to(() => const AddTaskContent());
         },
-        child: const Icon(Icons.add),
         backgroundColor: AppColor.themeColor,
+        child: const Icon(Icons.add),
       ),
       body: ScreenBackground(
         child: Column(
@@ -59,21 +54,21 @@ class _AddNewTaskState extends State<AddNewTask> {
             GetBuilder<TaskStatusCountController>(
                 builder: (taskStatusCountController) {
               return Visibility(
-                visible: taskStatusCountController.inProgress == false,
+                visible: _taskStatusCountController.inProgress == false,
                 replacement: const LinearProgressIndicator(),
                 child: SizedBox(
                   height: 100,
                   child: ListView.separated(
-                    itemCount: taskStatusCountController
+                    itemCount: _taskStatusCountController
                             .taskStatusCount.data?.length ??
                         0,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return TaskCard(
-                        title: taskStatusCountController
+                        title: _taskStatusCountController
                                 .taskStatusCount.data![index].sId ??
                             '',
-                        amount: taskStatusCountController
+                        amount: _taskStatusCountController
                                 .taskStatusCount.data![index].sum ??
                             0,
                       );
@@ -87,27 +82,28 @@ class _AddNewTaskState extends State<AddNewTask> {
             }),
             Expanded(
               child: Visibility(
-                visible: taskStatusListController.inProgress == false,
+                visible: _taskStatusListController.inProgress == false,
                 replacement: const Center(child: CircularProgressIndicator()),
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    taskStatusCountController.getTaskCount();
-                    taskStatusListController.getTaskList();
+                    _taskStatusListController.getTaskList();
+                    _taskStatusCountController.getTaskCount();
                   },
                   child: ListView.builder(
-                    itemCount: taskStatusListController
+                    itemCount: _taskStatusListController
                             .taskListByStatus.taskList?.length ??
                         0,
                     itemBuilder: (context, index) {
                       return CardContext(
-                        taskItem: taskStatusListController
+                        taskItem: _taskStatusListController
                             .taskListByStatus.taskList![index],
                         onDelete: () {
-                          _deleteTaskById(taskStatusListController
-                              .taskListByStatus.taskList![index].sId!);
+                          _taskDeleteController.deleteTaskById(
+                              _taskStatusListController
+                                  .taskListByStatus.taskList![index].sId!);
                         },
                         onEdit: () {
-                          _showUpdateStatusDialog(taskStatusListController
+                          _showUpdateStatusDialog(_taskStatusListController
                               .taskListByStatus.taskList![index].sId!);
                         },
                       );
@@ -120,21 +116,6 @@ class _AddNewTaskState extends State<AddNewTask> {
         ),
       ),
     );
-  }
-
-  Future<void> _deleteTaskById(String id) async {
-    setState(() {});
-    final response = await NetworkCaller.getRequest(Urls.deleteTaskById(id));
-    setState(() {});
-    if (response.isSuccess) {
-      taskStatusCountController.getTaskCount();
-      taskStatusListController.getTaskList();
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-            context, response.errorMessage ?? 'Delete task failed');
-      }
-    }
   }
 
   void _showUpdateStatusDialog(String id) {
@@ -152,39 +133,23 @@ class _AddNewTaskState extends State<AddNewTask> {
                   ListTile(
                       title: const Text('Completed'),
                       onTap: () {
-                        _updateTaskById(id, 'Completed');
+                        _taskUpdateController.updateTaskById(id, 'Completed');
                         Navigator.pop(context);
                       }),
                   ListTile(
                       title: const Text('Progress'),
                       onTap: () {
-                        _updateTaskById(id, 'Progress');
+                        _taskUpdateController.updateTaskById(id, 'Progress');
                         Navigator.pop(context);
                       }),
                   ListTile(
                       title: const Text('Cancelled'),
                       onTap: () {
-                        _updateTaskById(id, 'Progress');
+                        _taskUpdateController.updateTaskById(id, 'Progress');
                         Navigator.pop(context);
                       }),
                 ],
               ),
             ));
-  }
-
-  Future<void> _updateTaskById(String id, String status) async {
-    setState(() {});
-    final response =
-        await NetworkCaller.getRequest(Urls.updateTaskStatus(id, status));
-
-    if (response.isSuccess) {
-      taskStatusCountController.getTaskCount();
-      taskStatusListController.getTaskList();
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-            context, response.errorMessage ?? 'Task update task failed');
-      }
-    }
   }
 }

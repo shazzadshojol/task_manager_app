@@ -5,11 +5,12 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:task_manager_app/presentation/controllers/sign_in_controller.dart';
 import 'package:task_manager_app/presentation/screens/auth/email_verify_screen.dart';
-import 'package:task_manager_app/presentation/screens/bottom_nav_screen.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
 import 'package:task_manager_app/presentation/screens/auth/sign_up_screen.dart';
 import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
+
+import '../add_new_task.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({
@@ -25,7 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SignInController _signInController = Get.find<SignInController>();
+  late final SignInController _signInController = Get.find<SignInController>();
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +89,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           if (_formKey.currentState!.validate()) {
                             _signIn();
                           }
+                          return;
                         },
                         child: const Icon(
                           Icons.arrow_circle_right_outlined,
@@ -101,10 +103,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const EmailVerifyScreen()));
+                      Get.to(() => const EmailVerifyScreen());
                     },
                     child: const Text(
                       'Forgot Password?',
@@ -127,12 +126,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUpScreen(),
-                          ),
-                        );
+                        Get.to(() => const SignUpScreen());
                       },
                       child: const Text(
                         'Sign up',
@@ -153,15 +147,11 @@ class _SignInScreenState extends State<SignInScreen> {
         _emailTextController.text.trim(), _passTextController.text);
 
     if (result) {
-      if (Get.isOverlaysOpen) {
-        Get.back();
+      if (mounted) {
+        Get.offAll(() => const AddNewTask());
       }
-      Get.offAll(() => const BottomNavScreen());
     } else {
-      // if (mounted) {
-      //   showSnackBarMessage(context, _signInController.errorMassage);
-      // }
-      showSnackBarMessage(Get.context!, _signInController.errorMassage);
+      showSnackBarMessage(Get.context!, _signInController.errorMessage);
     }
   }
 

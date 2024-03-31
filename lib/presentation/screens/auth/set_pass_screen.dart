@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
 import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
+
+import '../../controllers/set_pass_controller.dart';
+import '../../widgets/snack_bar_message.dart';
 
 class PassSetScreen extends StatefulWidget {
   const PassSetScreen({
@@ -19,6 +23,7 @@ class _PassSetScreenState extends State<PassSetScreen> {
       TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final SetPassController _setPassController = SetPassController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +68,7 @@ class _PassSetScreenState extends State<PassSetScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignInScreen(),
-                          ),
-                        );
+                        _setPassword();
                       },
                       child: const Text('Confirm')),
                 ),
@@ -104,6 +104,18 @@ class _PassSetScreenState extends State<PassSetScreen> {
         ),
       )),
     );
+  }
+
+  Future<void> _setPassword() async {
+    if (_formKey.currentState!.validate()) {
+      final result = await _setPassController.setPasswordFromController(
+          _passTextController.text, _confirmPassTextController.text);
+      if (result) {
+        Get.to(() => const SignInScreen());
+      } else {
+        showSnackBarMessage(Get.context!, _setPassController.errorMessage);
+      }
+    }
   }
 
   @override

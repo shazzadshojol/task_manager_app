@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:task_manager_app/data/services/network_caller.dart';
-import 'package:task_manager_app/data/utility/urls.dart';
+
+import 'package:task_manager_app/presentation/controllers/otp_controller.dart';
 
 import 'package:task_manager_app/presentation/utils/app_color.dart';
 
@@ -24,7 +25,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   final TextEditingController _pinEditingController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _otpVerifyProgress = false;
+  final OtpController _otpController = OtpController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 ),
                 const SizedBox(height: 10),
                 PinCodeTextField(
+                  autoDisposeControllers: false,
                   length: 6,
                   obscureText: false,
                   animationType: AnimationType.fade,
@@ -83,7 +85,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         _otpVerify();
                       },
                       child: Visibility(
-                        visible: _otpVerifyProgress == false,
+                        visible: _otpController.inProgress == false,
                         replacement: const Center(
                           child: CircularProgressIndicator(),
                         ),
@@ -106,12 +108,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignInScreen(),
-                          ),
-                        );
+                        Get.to(() => const SignInScreen());
                       },
                       child: const Text(
                         'Sign in',
@@ -135,20 +132,14 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   }
 
   Future<void> _otpVerify() async {
-    _otpVerifyProgress = true;
-    setState(() {});
-    final otp = _pinEditingController.text;
-    final response = await NetworkCaller.getRequest(Urls.otpVerify(otp));
-
-    if (response.isSuccess && mounted) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const PassSetScreen()));
-    } else {
-      if (mounted) {
-        showSnackBarMessage(context, 'Verification failed');
+    if (_formKey.currentState!.validate()) {
+      final result =
+          await _otpController.otpFromController(_pinEditingController.text);
+      if (result) {
+        Get.to(() => const PassSetScreen());
+      } else {
+        showSnackBarMessage(Get.context!, _otpController.errorMessage);
       }
     }
-    _otpVerifyProgress = false;
-    setState(() {});
   }
 }

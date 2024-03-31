@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +7,6 @@ import 'package:task_manager_app/data/models/user_data.dart';
 import 'package:task_manager_app/data/services/network_caller.dart';
 import 'package:task_manager_app/data/utility/urls.dart';
 import 'package:task_manager_app/presentation/controllers/auth_controller.dart';
-import 'package:task_manager_app/presentation/screens/auth/email_verify_screen.dart';
 import 'package:task_manager_app/presentation/screens/bottom_nav_screen.dart';
 import 'package:task_manager_app/presentation/widgets/common_appbar.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';

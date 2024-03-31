@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/data/services/network_caller.dart';
-import 'package:task_manager_app/data/utility/urls.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
+import '../controllers/task_content_controller.dart';
 
 class AddTaskContent extends StatefulWidget {
   const AddTaskContent({
@@ -18,7 +16,8 @@ class _AddTaskContentState extends State<AddTaskContent> {
   final TextEditingController _disTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _addNewTaskProgress = false;
+
+  final TaskContentController _taskContentController = TaskContentController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,14 +69,20 @@ class _AddTaskContentState extends State<AddTaskContent> {
                 SizedBox(
                   width: double.infinity,
                   child: Visibility(
-                    visible: _addNewTaskProgress == false,
+                    visible: _taskContentController.inProgress == false,
                     replacement: const Center(
                       child: CircularProgressIndicator(),
                     ),
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          _addNewTask();
+                          _taskContentController.fromTaskContentController(
+                              _subjectTextController.text.trim(),
+                              _disTextController.text.trim(),
+                              'New', () {
+                            _subjectTextController.clear();
+                            _disTextController.clear();
+                          });
                         }
                       },
                       child: const Icon(
@@ -94,34 +99,6 @@ class _AddTaskContentState extends State<AddTaskContent> {
         ),
       )),
     );
-  }
-
-  Future<void> _addNewTask() async {
-    _addNewTaskProgress = true;
-    setState(() {});
-    Map<String, dynamic> inputParams = {
-      "title": _subjectTextController.text.trim(),
-      "description": _disTextController.text.trim(),
-      "status": "New"
-    };
-    final response =
-        await NetworkCaller.postRequest(Urls.createTask, inputParams);
-
-    _addNewTaskProgress = false;
-    setState(() {});
-
-    if (response.isSuccess) {
-      _subjectTextController.clear();
-      _disTextController.clear();
-      if (mounted) {
-        showSnackBarMessage(context, 'Task added');
-      }
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-            context, response.errorMessage ?? 'Task adding failed', true);
-      }
-    }
   }
 
   @override

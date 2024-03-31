@@ -8,11 +8,11 @@ import '../../data/services/network_caller.dart';
 
 class SignInController extends GetxController {
   bool _inProgress = false;
-  String? _errorMassage;
+  String? _errorMessage;
 
   bool get inProgress => _inProgress;
 
-  String get errorMassage => _errorMassage ?? 'Login failed';
+  String get errorMessage => _errorMessage ?? 'Login failed';
 
   Future<bool> signIn(String email, String password) async {
     _inProgress = true;
@@ -25,7 +25,6 @@ class SignInController extends GetxController {
     final ResponseObj response = await NetworkCaller.postRequest(
         Urls.login, inputParams,
         fromSignIn: true);
-    _inProgress = false;
 
     if (response.isSuccess) {
       LoginResponse loginResponse =
@@ -33,10 +32,11 @@ class SignInController extends GetxController {
 
       AuthController.saveUserData(loginResponse.userData!);
       AuthController.saveUserToken(loginResponse.token!);
+      _inProgress = false;
       update();
       return true;
     } else {
-      _errorMassage = response.errorMessage;
+      _errorMessage = response.errorMessage;
       update();
       return false;
     }

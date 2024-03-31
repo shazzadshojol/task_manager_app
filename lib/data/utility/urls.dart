@@ -9,10 +9,11 @@ class Urls {
   static String completedTaskList = '$_baseUrl/listTaskByStatus/Completed';
   static String progressTaskList = '$_baseUrl/listTaskByStatus/Progress';
   static String cancelledTask = '$_baseUrl/listTaskByStatus/Cancelled';
+  static String resetPassword = '$_baseUrl/RecoverResetPass';
 
   static String deleteTaskById(String id) => '$_baseUrl/deleteTask/$id';
 
-  static String emailVerify(String email) =>
+  static String emailVerify(String email, Map<String, dynamic> inputParams) =>
       '$_baseUrl/RecoverVerifyEmail/$email';
 
   static String otpVerify(String otp) => '$_baseUrl/RecoverVerifyEmail/$otp';

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/data/services/network_caller.dart';
-import 'package:task_manager_app/data/utility/urls.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_app/presentation/controllers/sign_up_controller.dart';
+import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
-
-import '../../../data/models/response_obj.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isRegistrationInProgress = false;
+  final SignUpController _signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -119,41 +119,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: Visibility(
-                          visible: isRegistrationInProgress == false,
+                          visible: _signUpController.inProgress == false,
                           replacement:
                               const Center(child: CircularProgressIndicator()),
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                isRegistrationInProgress = true;
-                                setState(() {});
-
-                                Map<String, dynamic> inputParams = {
-                                  "email": _emailTextController.text.trim(),
-                                  "firstName":
-                                      _firstNameTextController.text.trim(),
-                                  "lastName":
-                                      _lastNameTextController.text.trim(),
-                                  "mobile": _mobileTextController.text.trim(),
-                                  "password": _passTextController.text
-                                };
-                                final ResponseObj response =
-                                    await NetworkCaller.postRequest(
-                                        Urls.registration, inputParams);
-                                isRegistrationInProgress = false;
-                                setState(() {});
-                                if (response.isSuccess) {
-                                  if (mounted) {
-                                    showSnackBarMessage(
-                                        context, 'Registration completed');
-                                    Navigator.pop(context);
-                                  }
-                                } else {
-                                  if (mounted) {
-                                    showSnackBarMessage(
-                                        context, 'Registration failed', true);
-                                  }
-                                }
+                                _signUp();
                               }
                             },
                             child: const Icon(
@@ -176,7 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              Get.back();
                             },
                             child: const Text(
                               'Sign in',
@@ -193,6 +165,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       )),
     );
+  }
+
+  Future<void> _signUp() async {
+    final result = await _signUpController.signUp(
+        _emailTextController.text.trim(),
+        _firstNameTextController.text.trim(),
+        _lastNameTextController.text.trim(),
+        _mobileTextController.text.trim(),
+        _passTextController.text);
+
+    if (result) {
+      if (mounted) {
+        Get.back();
+      }
+      Get.offAll(() => const SignInScreen());
+    } else {
+      showSnackBarMessage(Get.context!, _signUpController.errorMessage);
+    }
   }
 
   @override

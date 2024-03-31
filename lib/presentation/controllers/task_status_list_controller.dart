@@ -18,9 +18,12 @@ class TaskStatusListController extends GetxController {
     _inProgress = true;
     update();
     final response = await NetworkCaller.getRequest(Urls.newTaskStatusUrl);
-
+    _inProgress = false;
+    update();
     if (response.isSuccess) {
       _taskListByStatus = TaskListByStatus.fromJson(response.responseBody);
+
+      update();
     } else {
       _errorMessage = response.errorMessage;
     }
