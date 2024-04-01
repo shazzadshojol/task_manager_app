@@ -148,7 +148,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     if (result) {
       if (mounted) {
-        Get.offAll(() => const AddNewTask());
+        Get.to(() => const AddNewTask());
       }
     } else {
       showSnackBarMessage(Get.context!, _signInController.errorMessage);

@@ -13,9 +13,9 @@ class TaskDeleteController extends GetxController {
 
   String get errorMessage => _errorMessage ?? 'Delete task failed';
 
-  final TaskStatusListController _taskStatusListController =
+  late final TaskStatusListController _taskStatusListController =
       Get.find<TaskStatusListController>();
-  final TaskStatusCountController _taskStatusCountController =
+  late final TaskStatusCountController _taskStatusCountController =
       Get.find<TaskStatusCountController>();
 
   Future<void> deleteTaskById(String id) async {

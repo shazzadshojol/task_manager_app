@@ -17,7 +17,8 @@ class _AddTaskContentState extends State<AddTaskContent> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TaskContentController _taskContentController = TaskContentController();
+  late final TaskContentController _taskContentController =
+      TaskContentController();
 
   @override
   Widget build(BuildContext context) {

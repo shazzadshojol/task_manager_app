@@ -25,7 +25,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   final TextEditingController _pinEditingController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final OtpController _otpController = OtpController();
+  late final OtpController _otpController = OtpController();
 
   @override
   Widget build(BuildContext context) {

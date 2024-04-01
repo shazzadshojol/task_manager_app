@@ -20,13 +20,13 @@ class AddNewTask extends StatefulWidget {
 }
 
 class _AddNewTaskState extends State<AddNewTask> {
-  final TaskStatusCountController _taskStatusCountController =
+  late final TaskStatusCountController _taskStatusCountController =
       Get.find<TaskStatusCountController>();
-  final TaskStatusListController _taskStatusListController =
+  late final TaskStatusListController _taskStatusListController =
       Get.find<TaskStatusListController>();
-  final TaskDeleteController _taskDeleteController =
+  late final TaskDeleteController _taskDeleteController =
       Get.find<TaskDeleteController>();
-  final TaskUpdateController _taskUpdateController =
+  late final TaskUpdateController _taskUpdateController =
       Get.find<TaskUpdateController>();
 
   @override

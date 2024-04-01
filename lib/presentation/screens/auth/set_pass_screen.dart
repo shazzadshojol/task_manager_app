@@ -23,7 +23,7 @@ class _PassSetScreenState extends State<PassSetScreen> {
       TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SetPassController _setPassController = SetPassController();
+  late final SetPassController _setPassController = SetPassController();
 
   @override
   Widget build(BuildContext context) {

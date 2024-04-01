@@ -13,9 +13,9 @@ class TaskUpdateController extends GetxController {
 
   String get errorMessage => _errorMessage ?? 'Update task failed';
 
-  final TaskStatusListController _taskStatusListController =
+  late final TaskStatusListController _taskStatusListController =
       Get.find<TaskStatusListController>();
-  final TaskStatusCountController _taskStatusCountController =
+  late final TaskStatusCountController _taskStatusCountController =
       Get.find<TaskStatusCountController>();
 
   Future<void> updateTaskById(String id, String status) async {

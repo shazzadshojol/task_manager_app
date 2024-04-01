@@ -20,7 +20,7 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final EmailVerifyController _emailVerifyController =
+  late final EmailVerifyController _emailVerifyController =
       Get.find<EmailVerifyController>();
 
   @override
