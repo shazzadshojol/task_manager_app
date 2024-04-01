@@ -41,38 +41,41 @@ class _ProgressTaskState extends State<ProgressTask> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Visibility(
-                visible: _taskStatusListController.inProgress == false,
-                replacement: const Center(child: CircularProgressIndicator()),
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    _taskStatusListController.getTaskList();
-                    _taskStatusCountController.getTaskCount();
-                  },
-                  child: ListView.builder(
-                    itemCount: _taskStatusListController
-                            .taskListByStatus.taskList?.length ??
-                        0,
-                    itemBuilder: (context, index) {
-                      return CardContext(
-                        taskItem: _taskStatusListController
-                            .taskListByStatus.taskList![index],
-                        onDelete: () {
-                          _taskDeleteController.deleteTaskById(
-                              _taskStatusListController
-                                  .taskListByStatus.taskList![index].sId!);
-                        },
-                        onEdit: () {
-                          _showUpdateStatusDialog(_taskStatusListController
-                              .taskListByStatus.taskList![index].sId!);
-                        },
-                      );
+            GetBuilder<TaskStatusListController>(
+                builder: (taskStatusListController) {
+              return Expanded(
+                child: Visibility(
+                  visible: taskStatusListController.inProgress == false,
+                  replacement: const Center(child: CircularProgressIndicator()),
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      taskStatusListController.getTaskList();
+                      _taskStatusCountController.getTaskCount();
                     },
+                    child: ListView.builder(
+                      itemCount: taskStatusListController
+                              .taskListByStatus.taskList?.length ??
+                          0,
+                      itemBuilder: (context, index) {
+                        return CardContext(
+                          taskItem: taskStatusListController
+                              .taskListByStatus.taskList![index],
+                          onDelete: () {
+                            _taskDeleteController.deleteTaskById(
+                                taskStatusListController
+                                    .taskListByStatus.taskList![index].sId!);
+                          },
+                          onEdit: () {
+                            _showUpdateStatusDialog(taskStatusListController
+                                .taskListByStatus.taskList![index].sId!);
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-            )
+              );
+            })
           ],
         ),
       ),
