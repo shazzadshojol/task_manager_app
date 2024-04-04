@@ -80,7 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child:
                       GetBuilder<SignInController>(builder: (signInController) {
                     return Visibility(
-                      visible: signInController.inProgress == false,
+                      visible: _signInController.inProgress == false,
                       replacement: const Center(
                         child: CircularProgressIndicator(),
                       ),
@@ -89,7 +89,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           if (_formKey.currentState!.validate()) {
                             _signIn();
                           }
-                          return;
+                          // return;
                         },
                         child: const Icon(
                           Icons.arrow_circle_right_outlined,

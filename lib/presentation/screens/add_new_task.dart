@@ -32,8 +32,10 @@ class _AddNewTaskState extends State<AddNewTask> {
   @override
   void initState() {
     super.initState();
-    _taskStatusListController.getTaskList();
-    _taskStatusCountController.getTaskCount();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _taskStatusListController.getTaskList();
+      _taskStatusCountController.getTaskCount();
+    });
   }
 
   @override
@@ -84,7 +86,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                 builder: (taskStatusListController) {
               return Expanded(
                 child: Visibility(
-                  visible: taskStatusListController.inProgress == false,
+                  visible: _taskStatusListController.inProgress == false,
                   replacement: const Center(child: CircularProgressIndicator()),
                   child: RefreshIndicator(
                     onRefresh: () async {
@@ -105,7 +107,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                     .taskListByStatus.taskList![index].sId!);
                           },
                           onEdit: () {
-                            _showUpdateStatusDialog(taskStatusListController
+                            _showUpdateStatusDialog(_taskStatusListController
                                 .taskListByStatus.taskList![index].sId!);
                           },
                         );

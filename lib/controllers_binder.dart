@@ -3,6 +3,7 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:task_manager_app/presentation/controllers/delete_task_controller.dart';
 import 'package:task_manager_app/presentation/controllers/email_verify_controller.dart';
 import 'package:task_manager_app/presentation/controllers/otp_controller.dart';
+import 'package:task_manager_app/presentation/controllers/profile_update_controller.dart';
 import 'package:task_manager_app/presentation/controllers/set_pass_controller.dart';
 import 'package:task_manager_app/presentation/controllers/sign_in_controller.dart';
 import 'package:task_manager_app/presentation/controllers/sign_up_controller.dart';
@@ -24,5 +25,6 @@ class ControllersBinder extends Bindings {
     Get.lazyPut(() => SetPassController());
     Get.lazyPut(() => TaskDeleteController());
     Get.lazyPut(() => TaskUpdateController());
+    Get.lazyPut(() => ProfileUpdateController());
   }
 }
