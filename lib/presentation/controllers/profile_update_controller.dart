@@ -8,8 +8,8 @@ import 'package:task_manager_app/data/models/user_data.dart';
 import 'package:task_manager_app/data/services/network_caller.dart';
 import 'package:task_manager_app/data/utility/urls.dart';
 import 'package:task_manager_app/presentation/controllers/auth_controller.dart';
+import 'package:task_manager_app/presentation/screens/add_new_task.dart';
 
-import '../screens/add_new_task.dart';
 
 class ProfileUpdateController extends GetxController {
   bool _inProgress = false;
@@ -65,7 +65,7 @@ class ProfileUpdateController extends GetxController {
         await AuthController.saveUserData(userData);
       }
 
-      Get.offAll(() => const AddNewTask());
+     await Get.offAll(() => const AddNewTask());
     } else {
       _errorMessage = response.errorMessage;
     }

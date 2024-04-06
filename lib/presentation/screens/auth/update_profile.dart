@@ -26,7 +26,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   XFile? _pickedImage;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late final ProfileUpdateController _profileUpdateController =
+  final ProfileUpdateController _profileUpdateController =
       Get.find<ProfileUpdateController>();
 
   @override
@@ -134,27 +134,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         );
                       }),
                     ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Have Account?',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: Colors.blueGrey),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            'Sign in',
-                          ),
-                        )
-                      ],
-                    )
+
+
                   ],
                 ),
               )
@@ -168,7 +149,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
   imagePickerMethod() {
     return GestureDetector(
       onTap: () async {
+        
         _pickedImage = await ImagePickerUtil.selectImage();
+        setState(() {
+
+        });
       },
       child: Container(
         decoration: BoxDecoration(

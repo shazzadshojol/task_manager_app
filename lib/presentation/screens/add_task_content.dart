@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:task_manager_app/presentation/screens/add_new_task.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 import '../controllers/task_content_controller.dart';
 
@@ -19,6 +22,12 @@ class _AddTaskContentState extends State<AddTaskContent> {
 
   late final TaskContentController _taskContentController =
       TaskContentController();
+
+  @override
+  void initState() {
+    _taskContentController;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +94,7 @@ class _AddTaskContentState extends State<AddTaskContent> {
                             _disTextController.clear();
                           });
                         }
+                        Get.to(()=>const AddNewTask());
                       },
                       child: const Icon(
                         Icons.arrow_circle_right_outlined,

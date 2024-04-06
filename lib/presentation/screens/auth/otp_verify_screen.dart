@@ -26,6 +26,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final OtpController _otpController = OtpController();
+  @override
+  void initState() {
+    _otpController;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

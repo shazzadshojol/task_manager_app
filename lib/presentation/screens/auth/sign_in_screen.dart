@@ -27,7 +27,11 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final SignInController _signInController = Get.find<SignInController>();
-
+@override
+  void initState() {
+  _signInController;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +152,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     if (result) {
       if (mounted) {
-        Get.to(() => const AddNewTask());
+       await Get.to(() => const AddNewTask());
       }
     } else {
       showSnackBarMessage(Get.context!, _signInController.errorMessage);

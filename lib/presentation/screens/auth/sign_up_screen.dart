@@ -21,9 +21,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool isRegistrationInProgress = false;
-  final SignUpController _signUpController = Get.find<SignUpController>();
 
+  final SignUpController _signUpController = Get.find<SignUpController>();
+@override
+  void initState() {
+  _signUpController;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
