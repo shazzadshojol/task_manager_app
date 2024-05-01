@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager_app/presentation/controllers/sign_up_controller.dart';
-import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
+import 'package:task_manager_app/presentation/methods/validation_checker.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -21,8 +19,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool isRegistrationInProgress = false;
-  final SignUpController _signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +45,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Email',
                         ),
-                        validator: (String? value) {
-                          if (value?.trim().isEmpty ?? true) {
-                            return 'Enter email';
-                          }
-                          return null;
-                        },
+                        validator: (value) =>
+                            validatorChecker(value, 'Enter Email'),
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
@@ -63,12 +55,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'First Name',
                         ),
-                        validator: (String? value) {
-                          if (value?.trim().isEmpty ?? true) {
-                            return 'Enter first name';
-                          }
-                          return null;
-                        },
+                        validator: (value) =>
+                            validatorChecker(value, 'Enter First Name'),
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
@@ -77,12 +65,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Last Name',
                         ),
-                        validator: (String? value) {
-                          if (value?.trim().isEmpty ?? true) {
-                            return 'Enter last name';
-                          }
-                          return null;
-                        },
+                        validator: (value) =>
+                            validatorChecker(value, 'Enter Last Name'),
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
@@ -91,12 +75,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Mobile',
                         ),
-                        validator: (String? value) {
-                          if (value?.trim().isEmpty ?? true) {
-                            return 'Enter mobile';
-                          }
-                          return null;
-                        },
+                        validator: (value) =>
+                            validatorChecker(value, 'Enter Mobile No'),
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
@@ -105,9 +85,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Password',
                         ),
-                        validator: (String? value) {
-                          if (value?.trim().isEmpty ?? true) {
-                            return 'Enter password';
+                        validator: (value) {
+                          final error =
+                              validatorChecker(value, 'Enter Password');
+                          if (error != null) {
+                            return error;
                           }
                           if (value!.length <= 6) {
                             return 'Minimum 6 letter password';
@@ -118,20 +100,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
-                        child: Visibility(
-                          visible: _signUpController.inProgress == false,
-                          replacement:
-                              const Center(child: CircularProgressIndicator()),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                _signUp();
-                              }
-                            },
-                            child: const Icon(
-                              Icons.arrow_circle_right_outlined,
-                              size: 35,
-                            ),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {}
+                          },
+                          child: const Icon(
+                            Icons.arrow_circle_right_outlined,
+                            size: 35,
                           ),
                         ),
                       ),
@@ -165,24 +140,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       )),
     );
-  }
-
-  Future<void> _signUp() async {
-    final result = await _signUpController.signUp(
-        _emailTextController.text.trim(),
-        _firstNameTextController.text.trim(),
-        _lastNameTextController.text.trim(),
-        _mobileTextController.text.trim(),
-        _passTextController.text);
-
-    if (result) {
-      if (mounted) {
-        Get.back();
-      }
-      Get.offAll(() => const SignInScreen());
-    } else {
-      showSnackBarMessage(Get.context!, _signUpController.errorMessage);
-    }
   }
 
   @override

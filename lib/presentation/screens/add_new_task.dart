@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager_app/presentation/controllers/task_status_count_controller.dart';
-import 'package:task_manager_app/presentation/controllers/task_status_list_controller.dart';
 import 'package:task_manager_app/presentation/screens/add_task_content.dart';
 import 'package:task_manager_app/presentation/utils/app_color.dart';
 import 'package:task_manager_app/presentation/widgets/card_context.dart';
 import 'package:task_manager_app/presentation/widgets/common_appbar.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 import 'package:task_manager_app/presentation/widgets/task_card.dart';
-
-import '../controllers/delete_task_controller.dart';
-import '../controllers/task_update_controller.dart';
 
 class AddNewTask extends StatefulWidget {
   const AddNewTask({super.key});
@@ -20,24 +15,6 @@ class AddNewTask extends StatefulWidget {
 }
 
 class _AddNewTaskState extends State<AddNewTask> {
-  late final TaskStatusCountController _taskStatusCountController =
-      Get.find<TaskStatusCountController>();
-  late final TaskStatusListController _taskStatusListController =
-      Get.find<TaskStatusListController>();
-  late final TaskDeleteController _taskDeleteController =
-      Get.find<TaskDeleteController>();
-  late final TaskUpdateController _taskUpdateController =
-      Get.find<TaskUpdateController>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _taskStatusListController.getTaskList();
-      _taskStatusCountController.getTaskCount();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,70 +30,30 @@ class _AddNewTaskState extends State<AddNewTask> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            GetBuilder<TaskStatusCountController>(
-                builder: (taskStatusCountController) {
-              return Visibility(
-                visible: _taskStatusCountController.inProgress == false,
-                replacement: const LinearProgressIndicator(),
-                child: SizedBox(
-                  height: 100,
-                  child: ListView.separated(
-                    itemCount: _taskStatusCountController
-                            .taskStatusCount.data?.length ??
-                        0,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return TaskCard(
-                        title: _taskStatusCountController
-                                .taskStatusCount.data![index].sId ??
-                            '',
-                        amount: _taskStatusCountController
-                                .taskStatusCount.data![index].sum ??
-                            0,
-                      );
-                    },
-                    separatorBuilder: (_, __) {
-                      return const SizedBox(width: 8);
-                    },
-                  ),
-                ),
-              );
-            }),
-            GetBuilder<TaskStatusListController>(
-                builder: (taskStatusListController) {
-              return Expanded(
-                child: Visibility(
-                  visible: _taskStatusListController.inProgress == false,
-                  replacement: const Center(child: CircularProgressIndicator()),
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      taskStatusListController.getTaskList();
-                      _taskStatusCountController.getTaskCount();
-                    },
-                    child: ListView.builder(
-                      itemCount: taskStatusListController
-                              .taskListByStatus.taskList?.length ??
-                          0,
-                      itemBuilder: (context, index) {
-                        return CardContext(
-                          taskItem: taskStatusListController
-                              .taskListByStatus.taskList![index],
-                          onDelete: () {
-                            _taskDeleteController.deleteTaskById(
-                                taskStatusListController
-                                    .taskListByStatus.taskList![index].sId!);
-                          },
-                          onEdit: () {
-                            _showUpdateStatusDialog(_taskStatusListController
-                                .taskListByStatus.taskList![index].sId!);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              );
-            })
+            SizedBox(
+              height: 100,
+              child: ListView.separated(
+                itemCount: 0,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return const TaskCard(
+                    title: '',
+                    amount: 0,
+                  );
+                },
+                separatorBuilder: (_, __) {
+                  return const SizedBox(width: 8);
+                },
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 0,
+                itemBuilder: (context, index) {
+                  return const CardContext();
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -135,24 +72,9 @@ class _AddNewTaskState extends State<AddNewTask> {
                     title: Text('New'),
                     trailing: Icon(Icons.check),
                   ),
-                  ListTile(
-                      title: const Text('Completed'),
-                      onTap: () {
-                        _taskUpdateController.updateTaskById(id, 'Completed');
-                        Navigator.pop(context);
-                      }),
-                  ListTile(
-                      title: const Text('Progress'),
-                      onTap: () {
-                        _taskUpdateController.updateTaskById(id, 'Progress');
-                        Navigator.pop(context);
-                      }),
-                  ListTile(
-                      title: const Text('Cancelled'),
-                      onTap: () {
-                        _taskUpdateController.updateTaskById(id, 'Progress');
-                        Navigator.pop(context);
-                      }),
+                  ListTile(title: const Text('Completed'), onTap: () {}),
+                  ListTile(title: const Text('Progress'), onTap: () {}),
+                  ListTile(title: const Text('Cancelled'), onTap: () {}),
                 ],
               ),
             ));

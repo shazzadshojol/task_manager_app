@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
-import 'package:task_manager_app/presentation/controllers/otp_controller.dart';
-
 import 'package:task_manager_app/presentation/utils/app_color.dart';
-
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-
-import 'package:task_manager_app/presentation/screens/auth/set_pass_screen.dart';
 import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
-import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   const OtpVerifyScreen({
@@ -25,7 +18,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   final TextEditingController _pinEditingController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late final OtpController _otpController = OtpController();
 
   @override
   Widget build(BuildContext context) {
@@ -81,18 +73,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: () {
-                        _otpVerify();
-                      },
-                      child: Visibility(
-                        visible: _otpController.inProgress == false,
-                        replacement: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        child: const Text(
-                          'verify',
-                          style: TextStyle(fontSize: 20),
-                        ),
+                      onPressed: () {},
+                      child: const Text(
+                        'verify',
+                        style: TextStyle(fontSize: 20),
                       )),
                 ),
                 const SizedBox(height: 50),
@@ -129,17 +113,5 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     _pinEditingController.dispose();
 
     super.dispose();
-  }
-
-  Future<void> _otpVerify() async {
-    if (_formKey.currentState!.validate()) {
-      final result =
-          await _otpController.otpFromController(_pinEditingController.text);
-      if (result) {
-        Get.to(() => const PassSetScreen());
-      } else {
-        showSnackBarMessage(Get.context!, _otpController.errorMessage);
-      }
-    }
   }
 }

@@ -8,5 +8,5 @@ class ResponseObj {
       {required this.isSuccess,
       required this.statusCode,
       required this.responseBody,
-      this.errorMessage});
+      this.errorMessage = ''});
 }

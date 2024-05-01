@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:task_manager_app/presentation/controllers/email_verify_controller.dart';
-import 'package:task_manager_app/presentation/screens/auth/otp_verify_screen.dart';
-import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
 
 class EmailVerifyScreen extends StatefulWidget {
   const EmailVerifyScreen({
@@ -19,15 +14,6 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
   final TextEditingController _emailTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  late final EmailVerifyController _emailVerifyController =
-      Get.find<EmailVerifyController>();
-
-  @override
-  void initState() {
-    _emailVerifyController;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,26 +53,14 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
-                  width: double.infinity,
-                  child: GetBuilder<EmailVerifyController>(
-                      builder: (emailVerifyController) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        _emailVerify();
-                      },
-                      child: Visibility(
-                        visible: emailVerifyController.inProgress == false,
-                        replacement: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_circle_right_outlined,
-                          size: 35,
-                        ),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Icon(
+                        Icons.arrow_circle_right_outlined,
+                        size: 35,
                       ),
-                    );
-                  }),
-                ),
+                    )),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -99,15 +73,7 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
                           color: Colors.blueGrey),
                     ),
                     TextButton(
-                      onPressed: () {
-                        Get.to(() => const SignInScreen());
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const SignInScreen(),
-                        //   ),
-                        // );
-                      },
+                      onPressed: () {},
                       child: const Text(
                         'Sign in',
                       ),
@@ -120,18 +86,6 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
         ),
       )),
     );
-  }
-
-  Future<void> _emailVerify() async {
-    if (_formKey.currentState!.validate()) {
-      final result = await _emailVerifyController
-          .emailVerify(_emailTextController.text.trim());
-      if (result) {
-        Get.to(() => const OtpVerifyScreen());
-      } else {
-        showSnackBarMessage(Get.context!, _emailVerifyController.errorMessage);
-      }
-    }
   }
 
   @override

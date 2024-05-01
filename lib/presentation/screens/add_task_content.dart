@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-import '../controllers/task_content_controller.dart';
 
 class AddTaskContent extends StatefulWidget {
   const AddTaskContent({
@@ -16,9 +15,6 @@ class _AddTaskContentState extends State<AddTaskContent> {
   final TextEditingController _disTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  late final TaskContentController _taskContentController =
-      TaskContentController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,27 +65,11 @@ class _AddTaskContentState extends State<AddTaskContent> {
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: Visibility(
-                    visible: _taskContentController.inProgress == false,
-                    replacement: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _taskContentController.fromTaskContentController(
-                              _subjectTextController.text.trim(),
-                              _disTextController.text.trim(),
-                              'New', () {
-                            _subjectTextController.clear();
-                            _disTextController.clear();
-                          });
-                        }
-                      },
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                        size: 35,
-                      ),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Icon(
+                      Icons.arrow_circle_right_outlined,
+                      size: 35,
                     ),
                   ),
                 ),

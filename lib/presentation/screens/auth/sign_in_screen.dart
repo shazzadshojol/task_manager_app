@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:task_manager_app/presentation/controllers/sign_in_controller.dart';
 import 'package:task_manager_app/presentation/screens/auth/email_verify_screen.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
 import 'package:task_manager_app/presentation/screens/auth/sign_up_screen.dart';
-import 'package:task_manager_app/presentation/widgets/snack_bar_message.dart';
-
-import '../add_new_task.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({
@@ -26,7 +20,6 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late final SignInController _signInController = Get.find<SignInController>();
 
   @override
   Widget build(BuildContext context) {
@@ -77,33 +70,25 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child:
-                      GetBuilder<SignInController>(builder: (signInController) {
-                    return Visibility(
-                      visible: _signInController.inProgress == false,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _signIn();
-                          }
-                          // return;
-                        },
-                        child: const Icon(
-                          Icons.arrow_circle_right_outlined,
-                          size: 35,
-                        ),
-                      ),
-                    );
-                  }),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {}
+                      // return;
+                    },
+                    child: const Icon(
+                      Icons.arrow_circle_right_outlined,
+                      size: 35,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 50),
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Get.to(() => const EmailVerifyScreen());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EmailVerifyScreen()));
                     },
                     child: const Text(
                       'Forgot Password?',
@@ -140,19 +125,6 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       )),
     );
-  }
-
-  Future<void> _signIn() async {
-    final result = await _signInController.signIn(
-        _emailTextController.text.trim(), _passTextController.text);
-
-    if (result) {
-      if (mounted) {
-        Get.to(() => const AddNewTask());
-      }
-    } else {
-      showSnackBarMessage(Get.context!, _signInController.errorMessage);
-    }
   }
 
   @override

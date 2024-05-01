@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/app.dart';
-import 'package:task_manager_app/presentation/controllers/auth_controller.dart';
 import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager_app/presentation/screens/auth/update_profile.dart';
 import 'package:task_manager_app/presentation/utils/app_color.dart';
@@ -22,14 +21,14 @@ PreferredSizeWidget get commonAppBar {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AuthController.userData?.fullName ?? '',
+                  '',
                   style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       color: Colors.white),
                 ),
                 Text(
-                  AuthController.userData?.email ?? '',
+                  '',
                   style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -40,7 +39,6 @@ PreferredSizeWidget get commonAppBar {
           ),
           IconButton(
               onPressed: () {
-                AuthController.clearUserData();
                 Navigator.pushAndRemoveUntil(
                     TaskManager.navigatorKey.currentState!.context,
                     MaterialPageRoute(

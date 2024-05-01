@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get/instance_manager.dart';
-import 'package:task_manager_app/controllers_binder.dart';
+import 'package:task_manager_app/controller_binder.dart';
 import 'package:task_manager_app/presentation/screens/auth/splash_screen.dart';
 import 'package:task_manager_app/presentation/utils/app_color.dart';
 
@@ -23,7 +22,7 @@ class _TaskManagerState extends State<TaskManager> {
       title: 'Task Manager',
       home: const SplashScreen(),
       theme: _themeData,
-      initialBinding: ControllersBinder(),
+      initialBinding: ControllerBinder(),
     );
   }
 
