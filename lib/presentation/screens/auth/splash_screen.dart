@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_app/presentation/providers/auth_provider.dart';
 import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager_app/presentation/utils/assets_path.dart';
+
 import '../../widgets/screen_background.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _visitSignIn();
+    AuthProvider.checkLoggedStatus();
   }
 
   @override
@@ -28,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _visitSignIn() async {
     await Future.delayed(const Duration(seconds: 2));
-    
+
     Get.to(() => const SignInScreen());
   }
 }

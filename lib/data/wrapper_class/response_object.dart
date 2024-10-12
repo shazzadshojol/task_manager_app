@@ -1,12 +1,12 @@
-class ResponseObj {
+class ResponseObject {
   final bool isSuccess;
   final int statusCode;
   final dynamic responseBody;
   final String? errorMessage;
 
-  ResponseObj(
+  ResponseObject(
       {required this.isSuccess,
       required this.statusCode,
       required this.responseBody,
-      this.errorMessage = ''});
+      this.errorMessage});
 }

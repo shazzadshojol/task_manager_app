@@ -1,17 +1,17 @@
 class Urls {
-  static const String _baseUrl = 'https://task.teamrabbil.com/api/v1';
-  static String registration = '$_baseUrl/registration';
-  static String login = '$_baseUrl/login';
-  static String createTask = '$_baseUrl/createTask';
-  static String profileUpdate = '$_baseUrl/profileUpdate';
-  static String taskStatusCountUrl = '$_baseUrl/taskStatusCount';
-  static String newTaskStatusUrl = '$_baseUrl/listTaskByStatus/New';
-  static String completedTaskList = '$_baseUrl/listTaskByStatus/Completed';
-  static String progressTaskList = '$_baseUrl/listTaskByStatus/Progress';
-  static String cancelledTask = '$_baseUrl/listTaskByStatus/Cancelled';
+  static const String _baseUrl = 'http://152.42.163.176:2006/api/v1';
+  static String registration = '$_baseUrl/Registration';
+  static String login = '$_baseUrl/Login';
+  static String createTask = '$_baseUrl/CreateTask';
+  static String profileUpdate = '$_baseUrl/ProfileUpdate';
+  static String taskStatusCountUrl = '$_baseUrl/TaskStatusCount';
+  static String newTaskStatusUrl = '$_baseUrl/ListTaskByStatus/New';
+  static String completedTaskList = '$_baseUrl/ListTaskByStatus/Completed';
+  static String progressTaskList = '$_baseUrl/ListTaskByStatus/Progress';
+  static String cancelledTask = '$_baseUrl/ListTaskByStatus/Cancelled';
   static String resetPassword = '$_baseUrl/RecoverResetPass';
 
-  static String deleteTaskById(String id) => '$_baseUrl/deleteTask/$id';
+  static String deleteTaskById(String id) => '$_baseUrl/DeleteTask/$id';
 
   static String emailVerify(String email, Map<String, dynamic> inputParams) =>
       '$_baseUrl/RecoverVerifyEmail/$email';
@@ -19,5 +19,5 @@ class Urls {
   static String otpVerify(String otp) => '$_baseUrl/RecoverVerifyEmail/$otp';
 
   static String updateTaskStatus(String id, String status) =>
-      '$_baseUrl/updateTaskStatus/$id/$status';
+      '$_baseUrl/UpdateTaskStatus/$id/$status';
 }

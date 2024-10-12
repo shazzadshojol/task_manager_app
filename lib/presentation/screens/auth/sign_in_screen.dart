@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:provider/provider.dart';
+import 'package:task_manager_app/presentation/providers/signin_provider.dart';
 import 'package:task_manager_app/presentation/screens/auth/email_verify_screen.dart';
-import 'package:task_manager_app/presentation/widgets/screen_background.dart';
-
 import 'package:task_manager_app/presentation/screens/auth/sign_up_screen.dart';
+import 'package:task_manager_app/presentation/screens/bottom_nav_screen.dart';
+import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({
@@ -16,13 +18,11 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final TextEditingController _emailTextController = TextEditingController();
-  final TextEditingController _passTextController = TextEditingController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SignInProvider>(context);
     return Scaffold(
       body: ScreenBackground(
           child: Padding(
@@ -40,7 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  controller: _emailTextController,
+                  controller: provider.emailTextController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     hintText: 'Email',
@@ -54,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: _passTextController,
+                  controller: provider.passTextController,
                   keyboardType: TextInputType.text,
                   obscureText: true,
                   decoration: const InputDecoration(
@@ -71,9 +71,22 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
-                      // return;
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await provider.login(
+                            provider.emailTextController.text.trim(),
+                            provider.passTextController.text);
+
+                        if (provider.inProgress == false &&
+                            provider.errorMessage == null) {
+                          Get.offAll(() => const BottomNavScreen());
+                        } else {
+                          Get.snackbar('Error',
+                              provider.errorMessage ?? 'Failed to sign in');
+                        }
+                      } else {
+                        Get.snackbar('Failed', 'Login Failed');
+                      }
                     },
                     child: const Icon(
                       Icons.arrow_circle_right_outlined,
@@ -85,10 +98,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const EmailVerifyScreen()));
+                      Get.to(() => const EmailVerifyScreen());
                     },
                     child: const Text(
                       'Forgot Password?',
@@ -125,12 +135,5 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       )),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailTextController.dispose();
-    _passTextController.dispose();
-    super.dispose();
   }
 }

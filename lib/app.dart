@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:task_manager_app/controller_binder.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager_app/presentation/screens/auth/splash_screen.dart';
 import 'package:task_manager_app/presentation/utils/app_color.dart';
+import 'package:task_manager_app/providers_binder.dart';
 
 class TaskManager extends StatefulWidget {
   const TaskManager({super.key});
@@ -16,13 +17,15 @@ class TaskManager extends StatefulWidget {
 class _TaskManagerState extends State<TaskManager> {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      navigatorKey: TaskManager.navigatorKey,
-      debugShowCheckedModeBanner: false,
-      title: 'Task Manager',
-      home: const SplashScreen(),
-      theme: _themeData,
-      initialBinding: ControllerBinder(),
+    return MultiProvider(
+      providers: ProvidersBinder.getProvider(),
+      child: GetMaterialApp(
+        navigatorKey: TaskManager.navigatorKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Task Manager',
+        home: const SplashScreen(),
+        theme: _themeData,
+      ),
     );
   }
 

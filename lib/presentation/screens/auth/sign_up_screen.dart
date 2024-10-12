@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager_app/presentation/methods/validation_checker.dart';
+import 'package:task_manager_app/presentation/providers/signup_provider.dart';
+import 'package:task_manager_app/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager_app/presentation/widgets/screen_background.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,17 +14,11 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _emailTextController = TextEditingController();
-  final TextEditingController _firstNameTextController =
-      TextEditingController();
-  final TextEditingController _lastNameTextController = TextEditingController();
-  final TextEditingController _mobileTextController = TextEditingController();
-  final TextEditingController _passTextController = TextEditingController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SignUpProvider>(context);
     return Scaffold(
       body: ScreenBackground(
           child: Form(
@@ -40,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 16),
                       TextFormField(
-                        controller: _emailTextController,
+                        controller: provider.emailTextController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
                           hintText: 'Email',
@@ -50,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
-                        controller: _firstNameTextController,
+                        controller: provider.firstNameTextController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           hintText: 'First Name',
@@ -60,7 +57,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
-                        controller: _lastNameTextController,
+                        controller: provider.lastNameTextController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           hintText: 'Last Name',
@@ -70,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
-                        controller: _mobileTextController,
+                        controller: provider.mobileTextController,
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
                           hintText: 'Mobile',
@@ -80,7 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
-                        controller: _passTextController,
+                        controller: provider.passTextController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           hintText: 'Password',
@@ -102,7 +99,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {}
+                            print('clicked');
+                            if (_formKey.currentState!.validate() == true) {
+                              await provider.registration(
+                                  provider.emailTextController.text.trim(),
+                                  provider.firstNameTextController.text.trim(),
+                                  provider.lastNameTextController.text.trim(),
+                                  provider.mobileTextController.text.trim(),
+                                  provider.passTextController.text);
+
+                              if (provider.inProgress == false &&
+                                  provider.errorMessage == null) {
+                                Get.offAll(() => const SignInScreen());
+                              } else {
+                                Get.snackbar(
+                                    'Error',
+                                    provider.errorMessage ??
+                                        'Failed to register');
+                              }
+                            } else {
+                              Get.snackbar('Failed', 'Input valid data');
+                            }
                           },
                           child: const Icon(
                             Icons.arrow_circle_right_outlined,
@@ -140,15 +157,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       )),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailTextController.dispose();
-    _firstNameTextController.dispose();
-    _lastNameTextController.dispose();
-    _mobileTextController.dispose();
-    _passTextController.dispose();
-    super.dispose();
   }
 }
